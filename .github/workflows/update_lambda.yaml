@@ -1,0 +1,37 @@
+name: "Update lambda"
+
+on:
+  push:
+    paths:
+      - ".github/actions/update-lambda-function/action.yaml"
+      - ".github/workflows/update_lambda.yaml"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  sync-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ca-central-1
+
+      - name: Set env changes
+        run: |
+          echo "ENV_DIFF=1" >> $GITHUB_ENV
+
+      - name: Update lambda
+        if: env.ENV_DIFF != '0'
+        uses: ./.github/actions/update-lambda-function
+        with:
+          alias-name: latest
+          function-name: notify-admin-pr
