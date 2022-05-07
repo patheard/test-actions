@@ -28,7 +28,7 @@ runs:
       if: inputs.image-uri == ''
       shell: bash
       run: |
-        aws lambda update-function-code \
+        aws lambda update-function-configuration \
           --function-name ${{ inputs.function-name }} \
           --description $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 

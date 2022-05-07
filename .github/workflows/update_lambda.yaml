@@ -9,9 +9,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  AWS_DEFAULT_REGION: ca-central-1
-
 jobs:
   update-lambda:
     runs-on: ubuntu-latest
