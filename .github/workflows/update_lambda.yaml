@@ -9,8 +9,11 @@ defaults:
   run:
     shell: bash
 
+env:
+  AWS_DEFAULT_REGION: ca-central-1
+
 jobs:
-  sync-secrets:
+  update-lambda:
     runs-on: ubuntu-latest
 
     steps:
