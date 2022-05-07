@@ -22,7 +22,7 @@ runs:
       run: |
         aws lambda update-function-code \
           --function-name ${{ inputs.function-name }} \
-          --image-uri ${{ inputs.image-uri }} > /dev/null 2>&1
+          --image-uri ${{ inputs.image-uri }}
 
     - name: Update lambda description
       if: inputs.image-uri == ''
@@ -30,7 +30,7 @@ runs:
       run: |
         aws lambda update-function-code \
           --function-name ${{ inputs.function-name }} \
-          --description $(date -u +"%Y-%m-%dT%H:%M:%SZ") > /dev/null 2>&1
+          --description $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
     - name: Publish version and update alias
       shell: bash
@@ -41,4 +41,4 @@ runs:
         aws lambda update-alias \
           --function-name ${{ inputs.function-name }} \
           --name ${{ inputs.alias-name }} \
-          --function-version "$VERSION" > /dev/null 2>&1
+          --function-version "$VERSION"
