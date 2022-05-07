@@ -2,9 +2,8 @@ name: "Update lambda"
 
 on:
   push:
-    paths:
-      - ".github/actions/update-lambda-function/action.yaml"
-      - ".github/workflows/update_lambda.yaml"
+    branches:
+      - main
 
 defaults:
   run:
