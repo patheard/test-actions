@@ -13,8 +13,8 @@ jobs:
 
       - name: Notify Slack
         env:
-          WORKFLOW_URL: "https://github.com/cds-snc/forms-terraform/actions/workflows/terragrunt-apply-production.yml"
-          WORKFLOW_NAME: "Terragrunt apply PRODUCTION"
+          WORKFLOW_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          WORKFLOW_NAME: "${{ github.workflow }}"
         run: |
           json='{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":":red: GitHub workflow failed: <${{ env.WORKFLOW_URL }}|${{ env.WORKFLOW_NAME }}>"}}]}'      
           curl -X POST -H 'Content-type: application/json' --data "$json" ${{ secrets.SLACK_WEBHOOK_URL }}
