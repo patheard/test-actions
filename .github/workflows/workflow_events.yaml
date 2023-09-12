@@ -2,7 +2,6 @@ name: "Test workflow events"
 
 on:
   pull_request:
-  push:
   workflow_dispatch:
 
 jobs:
@@ -12,10 +11,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Dump GitHub event object
-        run: echo ${{ toJson(github) }}
-
-    #   - name: Notify Slack
-    #     run: |
-    #         json='{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":":red: GitHub workflow failed: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow.name }}>"}}]}'
-    #         curl -X POST -H 'Content-type: application/json' --data "$json" ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Notify Slack
+        env:
+          WORKFLOW_URL: "https://github.com/cds-snc/forms-terraform/actions/workflows/terragrunt-apply-production.yml"
+          WORKFLOW_NAME: "Terragrunt apply PRODUCTION"
+        run: |
+          json='{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":":red: GitHub workflow failed: <${{ env.WORKFLOW_URL }}|${{ env.WORKFLOW_NAME }}>"}}]}'      
+          curl -X POST -H 'Content-type: application/json' --data "$json" ${{ secrets.SLACK_WEBHOOK_URL }}
