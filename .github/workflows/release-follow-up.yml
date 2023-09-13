@@ -1,0 +1,14 @@
+name: Release follow-up
+
+on:
+  workflow_run:
+    workflows: ["Release published"]
+    types:
+      - completed
+
+jobs:
+  release-follow-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub event
+        run: echo ${{ toJson(github) }}
