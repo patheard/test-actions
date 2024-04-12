@@ -1,0 +1,25 @@
+name: Conditional matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  conditional-matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gc-articles
+          - name: gc-notify
+          - name: gc-forms
+            some_value: foo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print name
+        run: |
+          echo "name is: ${{ matrix.name }}"
+
+      - name: Check if some_value is set
+        if: matrix.some_value || false
+        run: |
+          echo "some_value is set: ${{ matrix.some_value }}"
