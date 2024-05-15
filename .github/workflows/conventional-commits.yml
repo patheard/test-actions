@@ -21,6 +21,10 @@ jobs:
         npm install -g @commitlint/{cli,config-conventional}
         echo "export default { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
     
-    - name: Test commit message
+    - name: Validate last commit
       run: |
-        npx commitlint --edit ${{ github.sha }}
+        npx commitlint --last --verbose
+
+    - name: Validate all PR commits
+      if: github.event_name == 'pull_request'
+      run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
