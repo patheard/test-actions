@@ -2,7 +2,6 @@ name: Conventional commits
 
 on:
   pull_request:
-  merge_group:
 
 jobs:
   conventional-commits:
@@ -13,7 +12,7 @@ jobs:
       with:
         node-version: '20.x'
 
-    - name: Set fetch depth
+    - name: Get all PR commits + 1
       run: echo "PR_FETCH_DEPTH=$(( ${{ github.event.pull_request.commits }} + 1 ))" >> "${GITHUB_ENV}"
 
     - name: Checkout
