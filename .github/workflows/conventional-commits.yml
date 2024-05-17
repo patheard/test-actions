@@ -18,13 +18,12 @@ jobs:
 
     - name: Setup commitlint
       run: |
-        npm install conventional-changelog-conventionalcommits
-        npm install commitlint@latest
+        npm install -g @commitlint/config-conventional @commitlint/cli
     
     - name: Validate last commit
       run: |
-        npx commitlint --last --verbose
+        npx commitlint --extends '@commitlint/config-conventional' --last --verbose
 
     - name: Validate all PR commits
       if: github.event_name == 'pull_request'
-      run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      run: npx commitlint --extends '@commitlint/config-conventional' --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
