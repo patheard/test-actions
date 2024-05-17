@@ -18,8 +18,8 @@ jobs:
 
     - name: Setup commitlint
       run: |
-        npm install -g @commitlint/{cli,config-conventional}
-        echo "export default { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+        npm install conventional-changelog-conventionalcommits
+        npm install commitlint@latest
     
     - name: Validate last commit
       run: |
