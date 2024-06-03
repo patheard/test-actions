@@ -1,7 +1,17 @@
 name: "Test skip/cancel behaviour"
 
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+    inputs:
+      skip_build_tag_push_lambda_images:
+        type: boolean
+        description: "Skip lambda build"
+      fail_build_tag_push_lambda_images:
+        type: boolean
+        description: "Fail lambda build"        
+      fail_update_lambda_function_image:
+        type: boolean
+        description: "Fail update lambdas"
 
 jobs:
   terragrunt-apply-ecr-only:
@@ -13,9 +23,14 @@ jobs:
   build-tag-push-lambda-images:
     needs: terragrunt-apply-ecr-only
     runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_build_tag_push_lambda_images }}
     steps:
       - name: Echo
         run: echo "Running build-tag-push-lambda-images"
+
+      - name: Fail
+        if: ${{ inputs.fail_build_tag_push_lambda_images }}
+        run: exit 1
 
   terragrunt-apply-all-modules:
     needs: build-tag-push-lambda-images
@@ -34,6 +49,10 @@ jobs:
     steps:
         - name: Echo
           run: echo "update-lambda-function-image"
+
+        - name: Fail
+          if: ${{ inputs.fail_update_lambda_function_image }}
+          run: exit 1
 
   notify-on-error:
     needs:
