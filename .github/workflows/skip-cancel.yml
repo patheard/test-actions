@@ -8,7 +8,10 @@ on:
         description: "Skip lambda build"
       fail_build_tag_push_lambda_images:
         type: boolean
-        description: "Fail lambda build"        
+        description: "Fail lambda build"
+      fail_terraform_apply:
+        type: boolean
+        description: "Fail Terraform apply"          
       fail_update_lambda_function_image:
         type: boolean
         description: "Fail update lambdas"
@@ -37,6 +40,10 @@ jobs:
     if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     steps:
+        - name: Fail
+          if: ${{ inputs.fail_terraform_apply }}
+          run: exit 1
+
         - name: Sleep
           run: sleep 10
    
