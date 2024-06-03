@@ -1,0 +1,47 @@
+name: "Test skip/cancel behaviour"
+
+on:
+    workflow_dispatch:
+
+jobs:
+  terragrunt-apply-ecr-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Running terragrunt-apply-ecr-only"
+
+  build-tag-push-lambda-images:
+    needs: terragrunt-apply-ecr-only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Running build-tag-push-lambda-images"
+
+  terragrunt-apply-all-modules:
+    needs: build-tag-push-lambda-images
+    if: ${{ !failure() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Echo
+          run: echo "Running terragrunt-apply-all-moduless"
+
+  update-lambda-function-image:
+    needs: terragrunt-apply-all-modules
+    runs-on: ubuntu-latest
+    steps:
+        - name: Echo
+          run: echo "update-lambda-function-image"
+
+  notify-on-error:
+    needs:
+      [
+        terragrunt-apply-ecr-only,
+        build-tag-push-lambda-images,
+        terragrunt-apply-all-modules,
+        update-lambda-function-image,
+      ]
+    if: ${{ failure() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+        - name: Echo
+          run: echo "notify-on-error"
