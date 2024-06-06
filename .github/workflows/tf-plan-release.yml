@@ -1,0 +1,70 @@
+name: "Terragrunt plan"
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - "version.txt"   
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Release please PR, use branch
+        if: ${{ startsWith(github.head_ref, 'release-please--') }}
+        run: echo "VERSION=${{ github.head_ref }}" >> $GITHUB_ENV
+
+      - name: Revert PR, use tag
+        if: ${{ !startsWith(github.head_ref, 'release-please--') }}
+        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV        
+
+  detect-lambda-changes:
+    needs: get-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
+
+  test-lambda-code:
+    needs: detect-lambda-changes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [audit-logs, audit-logs-archiver]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
+
+  build-lambda-images:
+    needs: detect-lambda-changes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [audit-logs, audit-logs-archiver]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
+
+  terragrunt-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}

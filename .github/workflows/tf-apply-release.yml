@@ -1,0 +1,57 @@
+name: "Terragrunt apply"
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "version.txt"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Get version
+        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Wait for tag to exist
+        run: ./.github/workflows/scripts/wait-for-tag.sh ${{ env.VERSION }}
+
+  terragrunt-apply-ecr-only:
+    needs: get-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
+
+  build-tag-push-lambda-images:
+    needs: terragrunt-apply-ecr-only
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [audit-logs, audit-logs-archiver]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
+
+  terragrunt-apply-all-modules:
+    needs: build-tag-push-lambda-images
+    if: ${{ !failure() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          ref: ${{ env.VERSION }}
