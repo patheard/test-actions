@@ -36,7 +36,7 @@ jobs:
           ref: ${{ env.VERSION }}
 
       - name: Get ref name
-        run: git rev-parse --abbrev-ref HEAD
+        run: git branch --show-current
 
   test-lambda-code:
     needs: detect-lambda-changes
@@ -52,7 +52,7 @@ jobs:
           ref: ${{ env.VERSION }}
 
       - name: Get ref name
-        run: git rev-parse --abbrev-ref HEAD
+        run: git branch --show-current
 
   build-lambda-images:
     needs: detect-lambda-changes
@@ -68,7 +68,7 @@ jobs:
           ref: ${{ env.VERSION }}
 
       - name: Get ref name
-        run: git rev-parse --abbrev-ref HEAD
+        run: git branch --show-current
 
   terragrunt-plan:
     runs-on: ubuntu-latest
@@ -79,4 +79,4 @@ jobs:
           ref: ${{ env.VERSION }}
 
       - name: Get ref name
-        run: git rev-parse --abbrev-ref HEAD
+        run: git branch --show-current
