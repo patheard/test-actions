@@ -35,6 +35,9 @@ jobs:
         with:
           ref: ${{ env.VERSION }}
 
+      - name: Get ref name
+        run: git rev-parse --abbrev-ref HEAD
+
   test-lambda-code:
     needs: detect-lambda-changes
     runs-on: ubuntu-latest
@@ -47,6 +50,9 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ env.VERSION }}
+
+      - name: Get ref name
+        run: git rev-parse --abbrev-ref HEAD
 
   build-lambda-images:
     needs: detect-lambda-changes
@@ -61,6 +67,9 @@ jobs:
         with:
           ref: ${{ env.VERSION }}
 
+      - name: Get ref name
+        run: git rev-parse --abbrev-ref HEAD
+
   terragrunt-plan:
     runs-on: ubuntu-latest
     steps:
@@ -68,3 +77,6 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ env.VERSION }}
+
+      - name: Get ref name
+        run: git rev-parse --abbrev-ref HEAD
