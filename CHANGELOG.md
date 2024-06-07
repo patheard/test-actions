@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/patheard/test-actions/compare/v1.2.0...v1.2.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* add missing checkout ([#23](https://github.com/patheard/test-actions/issues/23)) ([ee6ff04](https://github.com/patheard/test-actions/commit/ee6ff041fd388228c954b6f28637471f57e80932))
+
 ## [1.2.0](https://github.com/patheard/test-actions/compare/v1.1.3...v1.2.0) (2024-06-07)
 
 
