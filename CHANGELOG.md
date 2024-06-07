@@ -1,12 +1,5 @@
 # Changelog
 
-## [1.1.1](https://github.com/patheard/test-actions/compare/v1.1.0...v1.1.1) (2024-06-07)
-
-
-### Bug Fixes
-
-* how target version is passed to downstream jobs ([#7](https://github.com/patheard/test-actions/issues/7)) ([2d44383](https://github.com/patheard/test-actions/commit/2d44383d27ee9b24a57c400e9ab6826bebce6918))
-
 ## [1.1.0](https://github.com/patheard/test-actions/compare/v1.0.1...v1.1.0) (2024-06-06)
 
 
