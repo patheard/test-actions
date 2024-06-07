@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/patheard/test-actions/compare/v1.1.2...v1.1.3) (2024-06-07)
+
+
+### Documentation
+
+* update with act link ([#14](https://github.com/patheard/test-actions/issues/14)) ([9d32483](https://github.com/patheard/test-actions/commit/9d32483727e29139fe2424eb225245ece4388cee))
+
 ## [1.1.2](https://github.com/patheard/test-actions/compare/v1.1.1...v1.1.2) (2024-06-07)
 
 
