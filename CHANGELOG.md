@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.2](https://github.com/patheard/test-actions/compare/v1.2.1...v1.2.2) (2024-06-07)
+
+
+### Bug Fixes
+
+* fail if no version is set ([#29](https://github.com/patheard/test-actions/issues/29)) ([1d0740b](https://github.com/patheard/test-actions/commit/1d0740be773f60d60799d1f228d590e773ef7a06))
+
+
+### Documentation
+
+* update readme for last revert test ([#25](https://github.com/patheard/test-actions/issues/25)) ([db23d23](https://github.com/patheard/test-actions/commit/db23d23144b5cb930423edda1b3ed446b47a2197))
+
+
+### Miscellaneous Chores
+
+* release v1.2.2 ([#26](https://github.com/patheard/test-actions/issues/26)) ([e17d2ac](https://github.com/patheard/test-actions/commit/e17d2ac0c4836300ecab2bbbfdb3c50de2dc5c39))
+
 ## [1.2.1](https://github.com/patheard/test-actions/compare/v1.2.0...v1.2.1) (2024-06-07)
 
 
