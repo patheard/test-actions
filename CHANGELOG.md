@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/patheard/test-actions/compare/v1.2.1...v1.2.2) (2024-06-07)
+
+
+### Documentation
+
+* update readme for last revert test ([#25](https://github.com/patheard/test-actions/issues/25)) ([db23d23](https://github.com/patheard/test-actions/commit/db23d23144b5cb930423edda1b3ed446b47a2197))
+
 ## [1.2.1](https://github.com/patheard/test-actions/compare/v1.2.0...v1.2.1) (2024-06-07)
 
 
