@@ -17,15 +17,19 @@ runs:
       env:
         GITHUB_HEAD_REF: ${{ github.head_ref }}
       run: echo "version=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+      shell: bash
 
     - name: Get version, perform release of tag
       if: inputs.is-tagged == 'true'
       run: echo "version=v$(cat version.txt)" >> $GITHUB_ENV
+      shell: bash
 
     - name: Wait for tag to exist
       if: inputs.is-tagged == 'true'
       run: ./.github/workflows/scripts/wait-for-tag.sh ${{ env.version }}
+      shell: bash
 
     - name: Output version
       id: output-version
       run: echo "version=${{ env.version }}" >> $GITHUB_OUTPUT
+      shell: bash
