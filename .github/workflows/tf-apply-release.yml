@@ -15,21 +15,15 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.output-version.outputs.VERSION }}    
+      version: ${{ steps.get-version.outputs.version }}    
     steps:
-      - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Get version to deploy
+        id: get-version
+        uses: ./.github/workflows/get-version
+        with:
+          is-tagged: 'true'
 
-      - name: Get version
-        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV
-
-      - name: Wait for tag to exist
-        run: ./.github/workflows/scripts/wait-for-tag.sh ${{ env.VERSION }}
-
-      - name: Output version
-        id: output-version
-        run: echo "VERSION=${{ env.VERSION }}" >> $GITHUB_OUTPUT        
-
+  # We deploy ECR first to make sure it is available for the 'build-tag-push-lambda-images' job which will be run in parallel with `terragrunt-apply-all-modules`
   terragrunt-apply-ecr-only:
     needs: get-version
     runs-on: ubuntu-latest
@@ -45,13 +39,13 @@ jobs:
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md 
+        run: cat README.md
 
   build-tag-push-lambda-images:
     needs: [get-version, terragrunt-apply-ecr-only]
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}    
+      VERSION: ${{ needs.get-version.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -61,19 +55,18 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ env.VERSION }}
-
       - name: Get ref name
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md 
+        run: cat README.md
 
   terragrunt-apply-all-modules:
     needs: [get-version, build-tag-push-lambda-images]
     if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}    
+      VERSION: ${{ needs.get-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -84,4 +77,20 @@ jobs:
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md 
+        run: cat README.md
+
+  update-lambda-function-image:
+    needs: [get-version, terragrunt-apply-all-modules]
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [audit-logs, audit-logs-archiver]
+    steps:
+      - name: Get ref name
+        run: git branch --show-current
+
+      - name: Cat readme
+        run: cat README.md
