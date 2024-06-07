@@ -15,28 +15,19 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.output-version.outputs.VERSION }}
+      version: ${{ steps.get-version.outputs.version }}    
     steps:
-      - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      - name: Release please PR, use branch
-        if: ${{ startsWith(github.head_ref, 'release-please--') }}
-        run: echo "VERSION=${{ github.head_ref }}" >> $GITHUB_ENV
-
-      - name: Revert PR, use tag
-        if: ${{ !startsWith(github.head_ref, 'release-please--') }}
-        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV
-
-      - name: Output version
-        id: output-version
-        run: echo "VERSION=${{ env.VERSION }}" >> $GITHUB_OUTPUT             
+      - name: Get version to deploy
+        id: get-version
+        uses: ./.github/workflows/get-version
+        with:
+          is-tagged: ${{ !startsWith(github.head_ref, 'release-please--') }} # If not the release PR branch, assume it is a revert PR
 
   detect-lambda-changes:
     needs: get-version
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}
+      VERSION: ${{ needs.get-version.outputs.version }}  
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -47,13 +38,13 @@ jobs:
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md  
+        run: cat README.md 
 
   test-lambda-code:
     needs: [get-version, detect-lambda-changes]
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}    
+      VERSION: ${{ needs.get-version.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -74,7 +65,7 @@ jobs:
     needs: [get-version, detect-lambda-changes]
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}      
+      VERSION: ${{ needs.get-version.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -89,13 +80,13 @@ jobs:
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md 
+        run: cat README.md
 
   terragrunt-plan:
     needs: get-version
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ needs.get-version.outputs.version }}  
+      VERSION: ${{ needs.get-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -106,4 +97,4 @@ jobs:
         run: git branch --show-current
 
       - name: Cat readme
-        run: cat README.md 
+        run: cat README.md
