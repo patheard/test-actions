@@ -46,6 +46,9 @@ jobs:
       - name: Get ref name
         run: git branch --show-current
 
+      - name: Cat readme
+        run: cat README.md  
+
   test-lambda-code:
     needs: [get-version, detect-lambda-changes]
     runs-on: ubuntu-latest
@@ -63,6 +66,9 @@ jobs:
 
       - name: Get ref name
         run: git branch --show-current
+
+      - name: Cat readme
+        run: cat README.md 
 
   build-lambda-images:
     needs: [get-version, detect-lambda-changes]
@@ -82,6 +88,9 @@ jobs:
       - name: Get ref name
         run: git branch --show-current
 
+      - name: Cat readme
+        run: cat README.md 
+
   terragrunt-plan:
     needs: get-version
     runs-on: ubuntu-latest
@@ -95,3 +104,6 @@ jobs:
 
       - name: Get ref name
         run: git branch --show-current
+
+      - name: Cat readme
+        run: cat README.md 
