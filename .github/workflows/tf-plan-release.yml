@@ -14,6 +14,8 @@ permissions:
 jobs:
   get-version:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.output-version.outputs.VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -24,11 +26,17 @@ jobs:
 
       - name: Revert PR, use tag
         if: ${{ !startsWith(github.head_ref, 'release-please--') }}
-        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV        
+        run: echo "VERSION=v$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Output version
+        id: output-version
+        run: echo "VERSION=${{ env.VERSION }}" >> $GITHUB_OUTPUT             
 
   detect-lambda-changes:
     needs: get-version
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -39,8 +47,10 @@ jobs:
         run: git branch --show-current
 
   test-lambda-code:
-    needs: detect-lambda-changes
+    needs: [get-version, detect-lambda-changes]
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}    
     strategy:
       fail-fast: false
       matrix:
@@ -55,8 +65,10 @@ jobs:
         run: git branch --show-current
 
   build-lambda-images:
-    needs: detect-lambda-changes
+    needs: [get-version, detect-lambda-changes]
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}      
     strategy:
       fail-fast: false
       matrix:
@@ -71,7 +83,10 @@ jobs:
         run: git branch --show-current
 
   terragrunt-plan:
+    needs: get-version
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.get-version.outputs.version }}  
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
