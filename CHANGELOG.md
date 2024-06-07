@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/patheard/test-actions/compare/v1.1.1...v1.1.2) (2024-06-07)
+
+
+### Documentation
+
+* add readme and dump its contents ([#11](https://github.com/patheard/test-actions/issues/11)) ([f44c8c0](https://github.com/patheard/test-actions/commit/f44c8c09859a2cc304b34ef3f165c51e9c50ef83))
+
 ## [1.1.1](https://github.com/patheard/test-actions/compare/v1.1.0...v1.1.1) (2024-06-07)
 
 
