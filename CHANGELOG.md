@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/patheard/test-actions/compare/v1.1.3...v1.2.0) (2024-06-07)
+
+
+### Features
+
+* switch to composite action ([#19](https://github.com/patheard/test-actions/issues/19)) ([4bd2ae9](https://github.com/patheard/test-actions/commit/4bd2ae9cca706fd65ffd53c46464b98f0e401e59))
+
+
+### Bug Fixes
+
+* checkout before composite action ([#21](https://github.com/patheard/test-actions/issues/21)) ([47cac41](https://github.com/patheard/test-actions/commit/47cac412b1659206f82cbb1705708dbf7938cda6))
+* set composite action step shell ([#22](https://github.com/patheard/test-actions/issues/22)) ([4cdb46e](https://github.com/patheard/test-actions/commit/4cdb46e9b3569e2ad9686b0947b772d93e0ca66b))
+
 ## [1.1.3](https://github.com/patheard/test-actions/compare/v1.1.2...v1.1.3) (2024-06-07)
 
 
