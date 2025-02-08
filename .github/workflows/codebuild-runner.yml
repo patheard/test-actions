@@ -1,0 +1,15 @@
+name: "Test CodeBuild runner"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  workflow-events:
+    runs-on: codebuild-patheard-test-actions-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Curl endpoint
+        run: |
+          curl https://articles.cdssandbox.xyz --verbose
